@@ -96,7 +96,7 @@ app.get("/employeelist/:id", function(req, res){
 		//console.log(docs);
 		res.json(docs);
 	});
-});
+}); 
 
 app.put("/employeelist/:id", function(req, res){
 	var id = req.params.id;

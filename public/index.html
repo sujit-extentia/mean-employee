@@ -6,56 +6,81 @@
 
 <!-- Optional theme -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+<style>
+#error_msg{color:red}
+#success_msg{color:green}
+#msg_container{min-height: 30px}
+#top_btn_container{width:100%}
+</style>
 		<title>Employee list app</title>
 	</head>
 	<body>
 		<div class="container" ng-controller="AppCtrl">
 			<h1>Employee list app</h1>
-			<table class="table">
-				<thead>
-					<tr>
-						<th>Name</th>
-						<th>Email</th>
-						<th>Contact No.</th>
-						<th>Birth Date</th>
-						<th>Action</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<td><input class="form-control" ng-model="employee.employee_name"  required></td>
-						<td><input class="form-control" ng-model="employee.employee_email"  required></td>
-						<td><input class="form-control" ng-model="employee.employee_conteact_no"  required></td>
-						<td><input class="form-control" ng-model="employee.employee_dob"  required></td>
-						<td>
-							<!--<input type="file" id="file" name="file"/>-->
-							<input type="file" name="file" onchange="angular.element(this).scope().uploadFile(this.files)"/>
+				<div class="form-group" ng-form name="myForm">
 
-							<!--<button ng-click="angular.element(this).scope().uploadFile(this.files)">Add</button>-->
-						</td>
-						<td>
-							<button class="btn btn-primary" ng-click="addEmployee();">Add Employee</button>
-							&nbsp;&nbsp;<button class="btn btn-info" ng-click="updateEmployee(employee._id);">Update</button>
-						</td>
-					</tr>
-					
-					<tr ng-repeat="employee in employeelist">
-						<td>{{employee.employee_name}}</td>
-						<td>{{employee.employee_email}}</td>
-						<td>{{employee.employee_conteact_no}}</td>
-						<td>{{employee.employee_dob | date}}</td>
-						<td>
-							<img ng-if="employee.employee_img === undefined || employee.employee_img == ''" ng-src="{{basePath + 'avtaar.png'}}" width="80px">
-							<img ng-if="employee.employee_img !== undefined && employee.employee_img != ''" ng-src="{{basePath + employee.employee_img}}" width="80px">
-							
-						</td>
-						<td>
-							<button class="btn btn-danger" ng-click="removeEmployee(employee._id);">Remove</button>
-							&nbsp;&nbsp;<button class="btn btn-info" ng-click="editEmployee(employee._id);">Edit</button>
-						</td>
-					</tr>
-				</tbody>
-			<table>
+				<table class="table">
+					<thead>
+						<tr>
+							<th>Name</th>
+							<th>Email</th>
+							<th>Contact No.</th>
+							<th>Birth Date</th>
+							<th>Action</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td><input class="form-control" name="employee_name" ng-model="employee.employee_name"  required></td>
+							<td><input class="form-control" name="employee_email" ng-model="employee.employee_email"  type="email" required></td>
+							<td><input class="form-control" name="employee_conteact_no" ng-model="employee.employee_conteact_no"  required></td>
+							<td><input class="form-control" name="employee_dob" ng-model="employee.employee_dob"  required></td>
+							<td>
+								<!--<input type="file" id="file" name="file"/>-->
+								<input type="file" name="file" onchange="angular.element(this).scope().uploadFile(this.files)"/>
+
+								<!--<button ng-click="angular.element(this).scope().uploadFile(this.files)">Add</button>-->
+							</td>
+							<td>
+								<div id="top_btn_container">
+									<button class="btn btn-primary" ng-click="addEmployee();">Add Employee</button>
+									&nbsp;&nbsp;<button class="btn btn-info" ng-click="updateEmployee(employee._id);">Update</button>
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="6" class="msg_td">
+								<div id="msg_container">
+									<div id="error_msg" class="msg error_msg" ng-show="form_submitted">{{error_msg}}
+										
+										<div class="error_msg" ng-show="myForm.employee_name.$error.required"><br/>Employee Name is reuqired.</div>
+										<div class="error_msg" ng-show="myForm.employee_email.$error.required"><br/>Employee Email is reuqired.</div>
+										<div class="error_msg" ng-show="myForm.employee_email.$error.email"><br/>Email is invalid.</div>
+										<div class="error_msg" ng-show="myForm.employee_conteact_no.$error.required"><br/>Employee Contact Number is reuqired.</div>
+										<div class="error_msg" ng-show="myForm.employee_dob.$error.required"><br/>Employee DOB is reuqired.</div>
+									</div>
+									<div id="success_msg" class="msg">{{success_msg}}</div>
+								</div>
+							</td>
+						</tr>
+						<tr ng-repeat="employee in employeelist">
+							<td>{{employee.employee_name}}</td>
+							<td>{{employee.employee_email}}</td>
+							<td>{{employee.employee_conteact_no}}</td>
+							<td>{{employee.employee_dob | date}}</td>
+							<td>
+								<img ng-if="employee.employee_img === undefined || employee.employee_img == ''" ng-src="{{basePath + 'avtaar.png'}}" width="80px">
+								<img ng-if="employee.employee_img !== undefined && employee.employee_img != ''" ng-src="{{basePath + employee.employee_img}}" width="80px">
+								
+							</td>
+							<td>
+								<button class="btn btn-danger" ng-click="removeEmployee(employee._id);">Remove</button>
+								&nbsp;&nbsp;<button class="btn btn-info" ng-click="editEmployee(employee._id);">Edit</button>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
 		</div>
 			<!-- <input ng-model="test">
 			{{test}} -->

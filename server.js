@@ -47,11 +47,17 @@ app.post('/upload', function (req, res) {
 //Fetch image and other uploads
 app.get("/public/uploads/:filename", function(req, res){
 	var filename = req.params.filename;
-	console.log("filename>>" + filename);
-	var img = fs.readFileSync('./public/uploads/' + filename);
+	//console.log("filename>>" + filename);
+	try{
+		var img = fs.readFileSync('./public/uploads/' + filename);
+	} catch(e){
+		//Image does not exist, send Avtaar image
+		var img = fs.readFileSync('./public/uploads/avtaar.png');
+	}
 	res.end(img, 'binary');
 });
 
+//Fetch employee for listing.
 app.get("/employeelist", function(req, res){
 	console.log("I received a GET request.");
 	db.employees.find(function (err, docs){
@@ -60,7 +66,7 @@ app.get("/employeelist", function(req, res){
 	});
 }); 
 
-
+//POST request for inserting new employee
 app.post('/employeelist', function(req, res){
 	console.log("Body>>");
 	console.log(req.body);
@@ -70,7 +76,7 @@ app.post('/employeelist', function(req, res){
 			if (err.name === 'MongoError' && err.code === 11000) {
 				// Duplicate username
 				//return res.status(500).send({ succes: false, message: 'User already exist!' });
-				console.log("Unique EORROR!!!!!!");
+				//console.log("Unique EORROR!!!!!!");
 				res.json({ succes: false, error:true, message: 'Email already exists.' });
 			}
 		}
@@ -79,7 +85,7 @@ app.post('/employeelist', function(req, res){
 	});
 });
 
-
+//DELETE request to delete employee record from DB
 app.delete('/employeelist/:id', function(req, res){
 	var id = req.params.id;
 	console.log(id);
@@ -89,6 +95,7 @@ app.delete('/employeelist/:id', function(req, res){
 	});
 });
 
+//GET employee by ID for Edit.
 app.get("/employeelist/:id", function(req, res){
 	var id = req.params.id;
 	console.log("Edit id  @server :" + id);
@@ -98,6 +105,7 @@ app.get("/employeelist/:id", function(req, res){
 	});
 }); 
 
+//PUT request for saving updated employee record.
 app.put("/employeelist/:id", function(req, res){
 	var id = req.params.id;
 	console.log("Edit id  @server :" + id);
@@ -109,7 +117,7 @@ app.put("/employeelist/:id", function(req, res){
 			employee_email:req.body.employee_email, 
 			employee_conteact_no:req.body.employee_conteact_no, 
 			employee_dob:req.body.employee_dob,
-			
+			employee_img:req.body.employee_img,
 			}}, 
 		new:true
 	}, 

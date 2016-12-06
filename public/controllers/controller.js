@@ -6,32 +6,47 @@
 var app = angular.module('myApp', []);
 app.controller('AppCtrl', function($scope, $http) {
     // console.log("This is controller!!");
-	$scope.basePath = "http://localhost:3000/public/uploads/"
+	$scope.basePath = "http://localhost:3000/public/uploads/";
+	$scope.error_msg = "";
+	$scope.success_msg = "";
+	$scope.form_submitted = false;
+	
 	var refresh = function(){
 		$http.get("/employeelist").success(function(response){
 			console.log("I got the requested data.");
 			$scope.employeelist = response;
-			$scope.employee = '';
+			$scope.employee = $scope.error_msg = '';
+			$scope.form_submitted = false;
 		});
 	}
 	
 	refresh();
 	
+	//Insert new employee
 	$scope.addEmployee = function(){
-		console.log($scope.employee);
+		$scope.success_msg = "";
+		$scope.form_submitted = true;
+		//console.log($scope.employee);
+		//Check validations.
+		var formData = $scope.myForm;
+		if(formData.employee_name.$valid && formData.employee_email.$valid && formData.employee_conteact_no.$valid && formData.employee_dob.$valid) {
 		
-		$http.post('/employeelist', $scope.employee).success(function(res){
-			console.log(res);
-			if(res.error != undefined && res.error) {
-				
-			} else {
-				refresh();
-			}
-		});
+			$http.post('/employeelist', $scope.employee).success(function(res){
+				console.log(res);
+				if(res.error != undefined && res.error) {
+					$scope.error_msg = res.message;
+				} else {
+					refresh();
+					$scope.error_msg = '';
+					$scope.success_msg = "Employee added successfully.";
+				}
+			});
+		}
 	}
 	
+	//Delete employee
 	$scope.removeEmployee = function(id){
-		console.log("Delete id:" + id);
+		//console.log("Delete id:" + id);
 		$http.delete("/employeelist/" + id).success(function(res){
 			refresh();
 		});
@@ -39,7 +54,7 @@ app.controller('AppCtrl', function($scope, $http) {
 	
 	//This will fetch employee record to EDIT.
 	$scope.editEmployee = function(id){
-		console.log("Edit id:" + id);
+		//console.log("Edit id:" + id);
 		$http.get("/employeelist/" + id).success(function(res){
 			$scope.employee = res;
 		});
@@ -47,27 +62,14 @@ app.controller('AppCtrl', function($scope, $http) {
 	
 	//This will save the edited employee record.
 	$scope.updateEmployee = function(id){
-		console.log("Hello>>");
-		console.log($scope.employee);
+		/*console.log("Hello>>");
+		console.log($scope.employee);*/
 		$http.put("/employeelist/" + $scope.employee._id, $scope.employee).success(function(res){
 			$scope.employee = '';
 			refresh();
 		});
 	};
 	
-	$scope.add = function(){
-	  var f = document.getElementById('file').files[0],
-		  r = new FileReader();
-	  r.onloadend = function(e){
-		var data = e.target.result;
-		//send your binary data via $http or $resource or do anything else with it
-		$http.post("/upload", data).success(function(res){
-			console.log("Res>>");
-			console.log(res);
-		});
-	  }
-	  r.readAsBinaryString(f);
-	}
 	
 	$scope.uploadFile = function(files) {
 		var fd = new FormData();

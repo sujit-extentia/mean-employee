@@ -11,7 +11,6 @@ var bodyParser = require("body-parser");
 var fs = require("fs-extra");
 
 var multer  = require('multer');
-var mkdirp = require('mkdirp');
 
 
 var storage = multer.diskStorage({

@@ -22,6 +22,21 @@ app.controller('AppCtrl', function($scope, $http) {
 	
 	refresh();
 	
+	
+	//Search text
+	$scope.$watch('searchText', function (newValue, oldValue) {
+		
+		if(newValue === undefined || newValue === null || newValue === "") {
+			console.log("here>>");
+			refresh();
+			return;
+		}
+        
+		$http.get("/employeelist/search/" + newValue).success(function(res){
+			$scope.employeelist = res;
+		});		
+    });
+	
 	//Insert new employee
 	$scope.addEmployee = function(){
 		$scope.success_msg = "";

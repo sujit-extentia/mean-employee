@@ -56,6 +56,16 @@ app.get("/public/uploads/:filename", function(req, res){
 	res.end(img, 'binary');
 });
 
+
+//Search record by name
+app.get("/employeelist/search/:name", function(req, res){
+	var name = req.params.name;
+	db.employees.find({employee_name:{$regex:name,$options:"$i"}}, function (err, docs){
+		console.log(docs);
+		res.json(docs);
+	});
+});
+
 //Fetch employee for listing.
 app.get("/employeelist", function(req, res){
 	console.log("I received a GET request.");

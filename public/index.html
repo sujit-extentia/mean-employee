@@ -11,6 +11,7 @@
 #success_msg{color:green}
 #msg_container{min-height: 30px}
 #top_btn_container{width:100%}
+#searchText{width:30%}
 </style>
 		<title>Employee list app</title>
 	</head>
@@ -50,6 +51,9 @@
 						</tr>
 						<tr>
 							<td colspan="6" class="msg_td">
+								<div id="search_box_container">
+									<input class="form-control" id="searchText" name="searchText" ng-model="searchText" placeholder="Search by name." >
+								</div>
 								<div id="msg_container">
 									<div id="error_msg" class="msg error_msg" ng-show="form_submitted">{{error_msg}}
 										
